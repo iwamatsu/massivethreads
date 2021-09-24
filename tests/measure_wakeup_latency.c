@@ -14,8 +14,10 @@ typedef unsigned long long ts_t;
 /* TODO: make it run on Sparc */
 static inline ts_t rdtsc() {
   unsigned long long u;
-#if defined(__i386__) || defined(__x86_64__)
+#if defined(__x86_64__)
   asm volatile ("rdtsc;shlq $32,%%rdx;orq %%rdx,%%rax":"=a"(u)::"%rdx");
+#elif defined(__i386__)
+  asm volatile ("rdtsc" : "=A" (u));
 #elif defined(__aarch64__)
   asm volatile("mrs %0, cntvct_el0" : "=r" (u));
 #endif
